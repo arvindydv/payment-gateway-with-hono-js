@@ -1,8 +1,8 @@
 import { Context } from "hono";
-import { getPaymentById, updatePaymentInDB } from "../models/payment"; // Adjust import paths as needed
-import { createRefund, Refund } from "../models/refund"; // Adjust import paths as needed
-import { ObjectId } from "mongodb"; // Import ObjectId
-// import { generateUniqueId } from "../utils"; // Import your unique ID generator function
+import { getPaymentById, updatePaymentInDB } from "../models/payment"; 
+import { createRefund, Refund } from "../models/refund"; 
+import { ObjectId } from "mongodb"; 
+
 
 const refundPayment = async (c: Context) => {
   try {
@@ -14,7 +14,7 @@ const refundPayment = async (c: Context) => {
 
     const payment = await getPaymentById(paymentId);
 
-    // Check if the payment exists and if the user is authorized
+    
     if (!payment || payment.userId.toString() !== c.user?._id.toString()) {
       return c.json(
         { message: "Payment not found or user not authorized" },
@@ -27,13 +27,10 @@ const refundPayment = async (c: Context) => {
       return c.json({ message: "Payment not eligible for refund" }, 400);
     }
 
-    // Create a refund
-    // const transactionId = generateUniqueId();
     const refund: Refund = {
       paymentId: new ObjectId(paymentId),
       amount: payment.amount,
       status: "completed",
-      transactionId,
     };
 
     const createdRefund = await createRefund(refund);
