@@ -19,15 +19,10 @@ const loginSchema = z.object({
 
 // generate tokens
 async function generateAccessAndRefreshTokens(userId: string) {
-  const accessToken = jwt.sign(
-    { id: userId },
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: "1h",
-    }
-  );
+  const token = jwt.sign({ _id: userId }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
-  return { accessToken };
+
+  return { token };
 }
 
 // register controller
@@ -70,7 +65,7 @@ async function login(c: Context) {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return c.json({ message: "Invalid credentials" }, 401);
 
-  const { accessToken } = await generateAccessAndRefreshTokens(
+  const { token } = await generateAccessAndRefreshTokens(
     user._id.toString()
   );
 
@@ -82,13 +77,13 @@ async function login(c: Context) {
 
   c.res.headers.set(
     "Set-Cookie",
-    `accessToken=${accessToken}; HttpOnly; ${options.secure ? "Secure" : ""}`
+    `token=${token}; HttpOnly; ${options.secure ? "Secure" : ""}`
   );
 
   return c.json(
     {
       user: { _id: user._id, name: user.name, email: user.email },
-      accessToken,
+      token,
     },
     200
   );
