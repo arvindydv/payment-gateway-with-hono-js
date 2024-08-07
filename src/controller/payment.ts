@@ -15,7 +15,7 @@ const paymentSchema = z.object({
 // Create payment
 async function createPayment(c: Context) {
   try {
-    // Parse and validate the request payload
+    
     const result = paymentSchema.safeParse(await c.req.json());
     console.log(c.user, "+++++++++++");
     if (!result.success) {

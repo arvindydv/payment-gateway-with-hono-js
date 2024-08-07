@@ -4,6 +4,7 @@ import { connectDB } from "./db/db";
 // import userRoutes from "./routes/user";
 import authRoutes from "./routes/user";
 import paymentRoutes from "./routes/payment";
+import refundRoutes from "./routes/refund";
 
 dotenv.config();
 const app = new Hono();
@@ -16,6 +17,7 @@ startServer();
 
 app.route("/auth", authRoutes);
 app.route("/payment", paymentRoutes);
+app.route("/refund", refundRoutes);
 
 // app.use("/api/users", userRoutes);
 
